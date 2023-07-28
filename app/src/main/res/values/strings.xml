@@ -12,4 +12,25 @@
     <string name="error_trying_to_get_data">Error trying to get data</string>
     <string name="unkown_host">"Unknow host "</string>
     <string name="error_undefine">Undefine error</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="do_not_have_an_account">Don\'t have an acount yet?</string>
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="email_no_empty">Email is not valid</string>
+    <string name="password_must_no_be_empty">Password must no be empty</string>
+    <string name="passwords_does_not_match">Passwords does not match</string>
+    <string name="error_sign_up">Error on sign up</string>
+    <string name="error_login_in">Error login in</string>
+    <string name="user_already_exists">User already taken</string>
+    <string name="error">Error</string>
+    <string name="invalid_pass_or_user">User or password invalid</string>
+    <string name="take_photographic">Take photographic</string>
+    <string name="settings">Settings</string>
+    <string name="list_of_dogs">List of dogs</string>
+    <string name="logout">logout</string>
 </resources>

@@ -1,6 +1,6 @@
 package com.prior_dev.dogedex.doglist
 
-import com.prior_dev.dogedex.Dog
+import com.prior_dev.dogedex.models.Dog
 import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.api.DogsApi
 import com.prior_dev.dogedex.api.makeNetworkCall

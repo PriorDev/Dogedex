@@ -6,7 +6,7 @@
 
         <variable
             name="dog"
-            type="com.prior_dev.dogedex.Dog" />
+            type="com.prior_dev.dogedex.models.Dog" />
     </data>
 
     <FrameLayout

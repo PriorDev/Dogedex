@@ -1,8 +1,8 @@
 package com.prior_dev.dogedex.api.dto
 
-import com.prior_dev.dogedex.Dog
+import com.prior_dev.dogedex.models.Dog
 
-fun DogDto.toDomain(): Dog{
+fun DogDto.toDomain(): Dog {
     return Dog(
         id = id,
         type = type,

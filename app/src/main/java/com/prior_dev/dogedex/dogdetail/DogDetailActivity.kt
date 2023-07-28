@@ -3,9 +3,8 @@ package com.prior_dev.dogedex.dogdetail
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import coil.imageLoader
 import coil.load
-import com.prior_dev.dogedex.Dog
+import com.prior_dev.dogedex.models.Dog
 import com.prior_dev.dogedex.R
 import com.prior_dev.dogedex.databinding.ActivityDogDetailBinding
 

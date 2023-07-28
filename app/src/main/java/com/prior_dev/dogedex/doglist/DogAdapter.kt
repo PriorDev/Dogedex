@@ -2,11 +2,11 @@ package com.prior_dev.dogedex.doglist
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemClickListener
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.prior_dev.dogedex.Dog
+import coil.load
+import com.prior_dev.dogedex.models.Dog
 import com.prior_dev.dogedex.databinding.DogListItemBinding
 
 class DogAdapter : ListAdapter<Dog, DogAdapter.DogViewHolder>(DiffCallback) {
@@ -41,10 +41,10 @@ class DogAdapter : ListAdapter<Dog, DogAdapter.DogViewHolder>(DiffCallback) {
         private val binding: DogListItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(dog: Dog){
-            binding.dogName.text = dog.name
-            binding.dogName.setOnClickListener {
+            binding.dogListItemLayout.setOnClickListener {
                 onItemClickListener?.invoke(dog)
             }
+            binding.dogImage.load(dog.imageUrl)
         }
     }
 }
