@@ -33,4 +33,9 @@
     <string name="settings">Settings</string>
     <string name="list_of_dogs">List of dogs</string>
     <string name="logout">logout</string>
+    <string name="error_adding_dog">Error adding dog</string>
+    <string name="is_necesary_granted_permission_for_use_this_app">Is necesary grant permissions for use this app</string>
+    <string name="permissions">Permissions</string>
+    <string name="please_grant_camera_permissions">Please grant camera permisions</string>
+    <string name="error_on_taking_photo">Error while trying to take a photo</string>
 </resources>

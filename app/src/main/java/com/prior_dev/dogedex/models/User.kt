@@ -42,9 +42,7 @@ data class User(
 
         fun logout(activity: Activity){
             activity.getSharedPreferences(AUTH_PREF, Context.MODE_PRIVATE).also {
-                it.edit()
-                    .clear()
-                    .apply()
+                it.edit().clear().apply()
             }
         }
     }
