@@ -74,4 +74,16 @@ class DogRepository {
             }
         }
     }
+
+    suspend fun getDogByMlId(mlDogId: String): ApiResponseStatus<Dog>{
+        return makeNetworkCall {
+            val response = DogsApi.retrofitService.getDogByMlId(mlDogId)
+
+            if(!response.isSuccess){
+                throw Exception(response.message)
+            }
+
+            response.data.dog.toDomain()
+        }
+    }
 }

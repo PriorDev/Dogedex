@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".main.MainActivity">
 
         <androidx.camera.view.PreviewView
             android:id="@+id/camera_preview"
@@ -52,6 +52,13 @@
             android:contentDescription="@string/settings"
             android:src="@drawable/baseline_settings_24"
             />
+
+        <ProgressBar
+            android:id="@+id/loadingWheel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
 
     </RelativeLayout>
 </layout>
