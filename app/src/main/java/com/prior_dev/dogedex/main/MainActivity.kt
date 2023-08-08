@@ -38,6 +38,7 @@ import com.prior_dev.dogedex.auth.LoginActivity
 import com.prior_dev.dogedex.databinding.ActivityMainBinding
 import com.prior_dev.dogedex.dogdetail.DogDetailActivity
 import com.prior_dev.dogedex.dogdetail.DogDetailActivity.Companion.DOG_KEY
+import com.prior_dev.dogedex.dogdetail.DogDetailActivity.Companion.IS_RECOGNITION_KEY
 import com.prior_dev.dogedex.doglist.DogListActivity
 import com.prior_dev.dogedex.machinglearning.Classifier
 import com.prior_dev.dogedex.machinglearning.DogRecognition
@@ -114,6 +115,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        viewModel.dogRecognition.observe(this){
+            enableTakePhotoButton(it)
+        }
+
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             requestCameraPermissions()
         }else{
@@ -124,46 +129,16 @@ class MainActivity : AppCompatActivity() {
     private fun openDogDetailActivity(dog: Dog) {
         val intent = Intent(this, DogDetailActivity::class.java)
         intent.putExtra(DOG_KEY, dog)
+        intent.putExtra(IS_RECOGNITION_KEY, true)
         startActivity(intent)
     }
 
     override fun onStart() {
         super.onStart()
-        classifier = Classifier(
+        viewModel.setupClassifier(
             FileUtil.loadMappedFile(this@MainActivity, MODEL_PATH),
             FileUtil.loadLabels(this@MainActivity, LABEL_PATH)
         )
-    }
-
-    @RequiresApi(Build.VERSION_CODES.M)
-    private fun requestCameraPermissions(){
-        when {
-            ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                setupCamera()
-            }
-            shouldShowRequestPermissionRationale(
-                Manifest.permission.CAMERA
-            ) -> {
-                AlertDialog.Builder(this)
-                    .setTitle(R.string.permissions)
-                    .setMessage(R.string.please_grant_camera_permissions)
-                    .setPositiveButton(android.R.string.ok){ _, _ ->
-                        requestPermissionLauncher.launch(
-                            Manifest.permission.CAMERA
-                        )
-                    }
-                    .setNegativeButton(android.R.string.cancel){ _, _, ->}
-                    .show()
-            }
-            else -> {
-                requestPermissionLauncher.launch(
-                    Manifest.permission.CAMERA
-                )
-            }
-        }
     }
 
     private fun openDogListActivity() {
@@ -206,14 +181,7 @@ class MainActivity : AppCompatActivity() {
                 .build()
 
             imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
-                val bitmap = convertImageProxyToBitmap(imageProxy)
-
-                bitmap?.let {
-                    val dogRecognition = classifier.recognizeImage(it).first()
-                    enableTakePhotoButton(dogRecognition)
-                }
-
-                imageProxy.close()
+                viewModel.recognizeImage(imageProxy)
             }
 
             cameraProvider.bindToLifecycle(
@@ -246,34 +214,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
-    private fun convertImageProxyToBitmap(imageProxy: ImageProxy): Bitmap? {
-        val image = imageProxy.image ?: return null
-
-        val yBuffer = image.planes[0].buffer // Y
-        val uBuffer = image.planes[1].buffer // U
-        val vBuffer = image.planes[2].buffer // V
-
-        val ySize = yBuffer.remaining()
-        val uSize = uBuffer.remaining()
-        val vSize = vBuffer.remaining()
-
-        val nv21 = ByteArray(ySize + uSize + vSize)
-
-        //U and V are swapped
-        yBuffer.get(nv21, 0, ySize)
-        vBuffer.get(nv21, ySize, vSize)
-        uBuffer.get(nv21, ySize + vSize, uSize)
-
-        val yuvImage = YuvImage(nv21, ImageFormat.NV21, image.width, image.height, null)
-        val out = ByteArrayOutputStream()
-        yuvImage.compressToJpeg(
-            Rect(0, 0, yuvImage.width, yuvImage.height), 100,
-            out
-        )
-        val imageBytes = out.toByteArray()
-
-        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun requestCameraPermissions(){
+        when {
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                setupCamera()
+            }
+            shouldShowRequestPermissionRationale(
+                Manifest.permission.CAMERA
+            ) -> {
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.permissions)
+                    .setMessage(R.string.please_grant_camera_permissions)
+                    .setPositiveButton(android.R.string.ok){ _, _ ->
+                        requestPermissionLauncher.launch(
+                            Manifest.permission.CAMERA
+                        )
+                    }
+                    .setNegativeButton(android.R.string.cancel){ _, _, ->}
+                    .show()
+            }
+            else -> {
+                requestPermissionLauncher.launch(
+                    Manifest.permission.CAMERA
+                )
+            }
+        }
     }
 }
 

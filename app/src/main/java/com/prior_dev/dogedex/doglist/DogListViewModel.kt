@@ -38,17 +38,4 @@ class DogListViewModel: ViewModel() {
         _status.value = apiResponseStatus as ApiResponseStatus<Any>
     }
 
-    fun addDotToUser(dogId: Long){
-       viewModelScope.launch {
-           _status.value = ApiResponseStatus.Loading()
-           val response = repository.addDogToUser(dogId)
-           handleAddDogToUserStatus(response)
-       }
-    }
-
-    private fun handleAddDogToUserStatus(apiResponseStatus: ApiResponseStatus<Any>){
-        if(apiResponseStatus is ApiResponseStatus.Success){
-            getDogCollection()
-        }
-    }
 }
