@@ -38,4 +38,7 @@
     <string name="permissions">Permissions</string>
     <string name="please_grant_camera_permissions">Please grant camera permisions</string>
     <string name="error_on_taking_photo">Error while trying to take a photo</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="oops_something_happend">Oops, something happend</string>
+    <string name="try_again">Try again</string>
 </resources>

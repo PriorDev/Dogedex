@@ -1,44 +1,33 @@
 package com.prior_dev.dogedex.main
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageFormat
-import android.graphics.Rect
-import android.graphics.YuvImage
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageCapture
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import com.prior_dev.dogedex.LABEL_PATH
 import com.prior_dev.dogedex.MODEL_PATH
 import com.prior_dev.dogedex.R
-import com.prior_dev.dogedex.WholeImageActivity
-import com.prior_dev.dogedex.WholeImageActivity.Companion.PHOTO_URI_KEY
 import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.api.ApiServiceInterceptor
 import com.prior_dev.dogedex.auth.LoginActivity
 import com.prior_dev.dogedex.databinding.ActivityMainBinding
-import com.prior_dev.dogedex.dogdetail.DogDetailActivity
-import com.prior_dev.dogedex.dogdetail.DogDetailActivity.Companion.DOG_KEY
-import com.prior_dev.dogedex.dogdetail.DogDetailActivity.Companion.IS_RECOGNITION_KEY
+import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity
+import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity.Companion.DOG_KEY
+import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity.Companion.IS_RECOGNITION_KEY
 import com.prior_dev.dogedex.doglist.DogListActivity
 import com.prior_dev.dogedex.machinglearning.Classifier
 import com.prior_dev.dogedex.machinglearning.DogRecognition
@@ -46,8 +35,6 @@ import com.prior_dev.dogedex.models.Dog
 import com.prior_dev.dogedex.models.User
 import com.prior_dev.dogedex.settings.SettingsActivity
 import org.tensorflow.lite.support.common.FileUtil
-import java.io.ByteArrayOutputStream
-import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -127,7 +114,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openDogDetailActivity(dog: Dog) {
-        val intent = Intent(this, DogDetailActivity::class.java)
+        val intent = Intent(this, DogDetailComposeActivity::class.java)
         intent.putExtra(DOG_KEY, dog)
         intent.putExtra(IS_RECOGNITION_KEY, true)
         startActivity(intent)
