@@ -2,28 +2,23 @@ package com.prior_dev.dogedex.dogdetail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +33,8 @@ import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import com.prior_dev.dogedex.R
 import com.prior_dev.dogedex.api.ApiResponseStatus
+import com.prior_dev.dogedex.composables.ErrorDialog
+import com.prior_dev.dogedex.composables.LoadingWheel
 import com.prior_dev.dogedex.models.Dog
 
 @OptIn(ExperimentalCoilApi::class)
@@ -50,7 +47,7 @@ fun DogDetailView(
 ) {
     Box(
         modifier = Modifier
-            .background(color = MaterialTheme.colors.primary)
+            .background(color = MaterialTheme.colorScheme.secondary)
             .padding(horizontal = 8.dp, vertical = 16.dp),
         contentAlignment = Alignment.TopCenter
     ){
@@ -75,20 +72,8 @@ fun DogDetailView(
         if(status is ApiResponseStatus.Loading){
             LoadingWheel()
         }else if(status is ApiResponseStatus.Error){
-            ErrorDialog(status = status, onErrorDismiss = onErrorDismiss)
+            ErrorDialog(messageId = status.messageId, onErrorDismiss = onErrorDismiss)
         }
-    }
-}
-
-@Composable
-fun LoadingWheel() {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .background(color = MaterialTheme.colors.background)
-            .fillMaxSize()
-    ){
-        CircularProgressIndicator()
     }
 }
 
@@ -271,7 +256,7 @@ private fun LifeIcon() {
     ) {
         Surface(
             shape = CircleShape,
-            color = MaterialTheme.colors.primary
+            color = MaterialTheme.colorScheme.secondary
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_hearth_white),
@@ -289,35 +274,9 @@ private fun LifeIcon() {
             modifier = Modifier
                 .width(200.dp)
                 .height(6.dp),
-            color = MaterialTheme.colors.primary
+            color = MaterialTheme.colorScheme.primary
         ) { }
     }
 }
 
-@Composable
-fun ErrorDialog(
-    status: ApiResponseStatus.Error<Any>,
-    onErrorDismiss: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = onErrorDismiss,
-        buttons = {
-            Row (
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ){
-                Button(
-                    onClick = onErrorDismiss,
-                ) {
-                    Text(text = stringResource(R.string.try_again))
-                }
-            }
-        },
-        title = {
-            Text(text = stringResource(R.string.oops_something_happend))
-        },
-        text = {
-            Text(text = stringResource(id = status.messageId))
-        }
-    )
-}
+

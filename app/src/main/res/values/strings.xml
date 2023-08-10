@@ -41,4 +41,6 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="oops_something_happend">Oops, something happend</string>
     <string name="try_again">Try again</string>
+    <string name="my_dog_collection">My dog collection</string>
+    <string name="back">back</string>
 </resources>
