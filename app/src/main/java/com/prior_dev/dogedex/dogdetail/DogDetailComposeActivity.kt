@@ -13,7 +13,9 @@ import com.prior_dev.dogedex.R
 import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.dogdetail.ui.theme.DogedexTheme
 import com.prior_dev.dogedex.models.Dog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DogDetailComposeActivity : ComponentActivity() {
     companion object{
         const val DOG_KEY = "dog"
@@ -42,7 +44,6 @@ class DogDetailComposeActivity : ComponentActivity() {
             }
 
             DogedexTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

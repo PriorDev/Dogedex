@@ -22,13 +22,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.prior_dev.dogedex.R
+import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.composables.AuthField
+import com.prior_dev.dogedex.composables.ErrorDialog
+import com.prior_dev.dogedex.composables.LoadingWheel
+import com.prior_dev.dogedex.models.User
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginView(
-//    status: LiveData<ApiResponseStatus<Any>>? = null,
+//    status: LiveData<ApiResponseStatus<User>>? = null,
 //    onErrorDismiss: () -> Unit,
     onLoginButtonClick: (String, String) -> Unit,
     onRegisterButtonClick: () -> Unit,

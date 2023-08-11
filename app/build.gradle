@@ -2,8 +2,9 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
+
     id 'kotlin-parcelize'
-    id 'androidx.navigation.safeargs'
 }
 
 android {
@@ -34,7 +35,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '1.8'
     }
     buildFeatures {
         dataBinding true
@@ -43,7 +44,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
     }
-    packaging {
+    packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
@@ -103,11 +104,11 @@ dependencies {
     implementation 'io.coil-kt:coil-compose:1.3.1'
 
     // Dependency Injection with Hilt
-    implementation "com.google.dagger:hilt-android:2.42"
-    androidTestImplementation platform('androidx.compose:compose-bom:2023.03.00')
-    debugImplementation 'androidx.compose.ui:ui-tooling'
-    kapt "com.google.dagger:hilt-compiler:2.42"
+    implementation 'com.google.dagger:hilt-android:2.47'
+    kapt "com.google.dagger:hilt-compiler:2.47"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
+//    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.42'
+//    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.42'
 
     // Espresso idling resources
     implementation 'androidx.test.espresso:espresso-idling-resource:3.4.0'
@@ -115,14 +116,15 @@ dependencies {
     // Retrofit y Moshi
     implementation "com.squareup.retrofit2:retrofit:2.9.0"
     implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+
+
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     debugImplementation "androidx.compose.ui:ui-test-manifest:1.3.0"
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.42'
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.42'
+
 
 
     // UI Tests

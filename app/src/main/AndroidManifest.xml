@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".DogdexApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -33,9 +34,6 @@
             android:parentActivityName=".main.MainActivity" />
         <activity
             android:name=".auth.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".dogdetail.DogDetailActivity"
             android:exported="false" />
         <activity
             android:name=".doglist.DogListActivity"

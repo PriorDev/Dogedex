@@ -34,10 +34,12 @@ import com.prior_dev.dogedex.machinglearning.DogRecognition
 import com.prior_dev.dogedex.models.Dog
 import com.prior_dev.dogedex.models.User
 import com.prior_dev.dogedex.settings.SettingsActivity
+import dagger.hilt.android.AndroidEntryPoint
 import org.tensorflow.lite.support.common.FileUtil
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -118,14 +120,6 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra(DOG_KEY, dog)
         intent.putExtra(IS_RECOGNITION_KEY, true)
         startActivity(intent)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        viewModel.setupClassifier(
-            FileUtil.loadMappedFile(this@MainActivity, MODEL_PATH),
-            FileUtil.loadLabels(this@MainActivity, LABEL_PATH)
-        )
     }
 
     private fun openDogListActivity() {

@@ -1,27 +1,28 @@
 package com.prior_dev.dogedex.machinglearning
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.ImageFormat
 import android.graphics.Rect
 import android.graphics.YuvImage
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.camera.core.ImageProxy
-import androidx.core.content.ContextCompat
-import com.prior_dev.dogedex.R
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import javax.inject.Inject
 
-class ClassifierRepository(private val classifier: Classifier) {
+interface ClassifierRepositoryTask{
+    suspend fun recognizeImage(imageProxy: ImageProxy): DogRecognition
+}
 
-    suspend fun recognizeImage(imageProxy: ImageProxy): DogRecognition{
-        return withContext(Dispatchers.IO){
+class ClassifierRepository @Inject constructor(
+    private val classifier: Classifier,
+    private val dispatcher: CoroutineDispatcher
+): ClassifierRepositoryTask {
+
+    override suspend fun recognizeImage(imageProxy: ImageProxy): DogRecognition{
+        return withContext(dispatcher){
             val bitmap = convertImageProxyToBitmap(imageProxy)
 
             bitmap?.let {

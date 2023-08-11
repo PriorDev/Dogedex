@@ -7,16 +7,22 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.doglist.DogRepository
+import com.prior_dev.dogedex.doglist.DogRepositoryTask
 import com.prior_dev.dogedex.machinglearning.Classifier
 import com.prior_dev.dogedex.machinglearning.ClassifierRepository
+import com.prior_dev.dogedex.machinglearning.ClassifierRepositoryTask
 import com.prior_dev.dogedex.machinglearning.DogRecognition
 import com.prior_dev.dogedex.models.Dog
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.nio.MappedByteBuffer
+import javax.inject.Inject
 
-class MainViewModel: ViewModel() {
-    private val repository = DogRepository()
-    private lateinit var classifierRepository: ClassifierRepository
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val repository : DogRepositoryTask,
+    private val classifierRepository: ClassifierRepositoryTask
+): ViewModel() {
 
     private val _dog = MutableLiveData<Dog>()
     val dog: LiveData<Dog>
@@ -29,11 +35,6 @@ class MainViewModel: ViewModel() {
     private val _dogRecognition = MutableLiveData<DogRecognition>()
     val dogRecognition: LiveData<DogRecognition>
         get() = _dogRecognition
-
-    fun setupClassifier(tfLiteModel: MappedByteBuffer, labels: List<String>){
-        val classifier = Classifier(tfLiteModel, labels)
-        classifierRepository = ClassifierRepository(classifier)
-    }
 
     fun getRecognizedDog(mlDogId: String){
         viewModelScope.launch {

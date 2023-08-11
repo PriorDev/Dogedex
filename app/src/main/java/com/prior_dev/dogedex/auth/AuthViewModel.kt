@@ -6,10 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.prior_dev.dogedex.R
 import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.models.User
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel: ViewModel() {
-    private val repository = AuthRepository()
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val repository : AuthRepositoryTask
+): ViewModel() {
 
     var user = mutableStateOf<User?>(null)
         private set
@@ -58,6 +62,7 @@ class AuthViewModel: ViewModel() {
         if(apiResponseStatus is ApiResponseStatus.Success){
             user.value = apiResponseStatus.data
         }
+
         status.value = apiResponseStatus
     }
 

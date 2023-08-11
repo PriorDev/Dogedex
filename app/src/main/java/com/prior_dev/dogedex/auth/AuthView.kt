@@ -25,12 +25,14 @@ fun AuthScreen(
         navController = navController,
         onLoginButtonClick = onLoginButtonClick,
         onSignUpButtonClick = onSignUpButtonClick,
-        authViewModel = authViewModel
+        authViewModel = authViewModel,
+        status = status,
+        onErrorDismiss = onErrorDismiss
     )
 
-    if(status is ApiResponseStatus.Loading<*>){
+    if(status is ApiResponseStatus.Loading<User>){
         LoadingWheel()
-    }else if(status is ApiResponseStatus.Error<*>){
+    }else if(status is ApiResponseStatus.Error<User>){
         ErrorDialog(messageId = status.messageId, onErrorDismiss = onErrorDismiss)
     }
 }
@@ -41,6 +43,8 @@ private fun AuthNavHost(
     onLoginButtonClick: (String, String) -> Unit,
     onSignUpButtonClick: (email: String, password: String, passwordConfirmation: String) -> Unit,
     authViewModel: AuthViewModel,
+    status: ApiResponseStatus<User>?,
+    onErrorDismiss: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -52,7 +56,7 @@ private fun AuthNavHost(
                     navController.navigate(SignUpScreenDestination)
                 },
                 onLoginButtonClick = onLoginButtonClick,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
             )
         }
 

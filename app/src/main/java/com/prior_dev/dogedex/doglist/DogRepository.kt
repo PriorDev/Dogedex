@@ -1,19 +1,29 @@
 package com.prior_dev.dogedex.doglist
 
 import com.prior_dev.dogedex.R
-import com.prior_dev.dogedex.models.Dog
 import com.prior_dev.dogedex.api.ApiResponseStatus
-import com.prior_dev.dogedex.api.DogsApi
+import com.prior_dev.dogedex.api.ApiService
 import com.prior_dev.dogedex.api.dto.AddDotToUserDto
-import com.prior_dev.dogedex.api.makeNetworkCall
 import com.prior_dev.dogedex.api.dto.toDomain
-import kotlinx.coroutines.Dispatchers
+import com.prior_dev.dogedex.api.makeNetworkCall
+import com.prior_dev.dogedex.models.Dog
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class DogRepository {
-    suspend fun getDogCollection(): ApiResponseStatus<List<Dog>>{
-        return withContext(Dispatchers.IO){
+interface DogRepositoryTask {
+    suspend fun getDogCollection(): ApiResponseStatus<List<Dog>>
+    suspend fun addDogToUser(dogId: Long): ApiResponseStatus<Any>
+    suspend fun getDogByMlId(mlDogId: String): ApiResponseStatus<Dog>
+}
+
+class DogRepository @Inject constructor(
+    private val api: ApiService,
+    private val dispatcher: CoroutineDispatcher
+) : DogRepositoryTask {
+    override suspend fun getDogCollection(): ApiResponseStatus<List<Dog>>{
+        return withContext(dispatcher){
             val allDogsListJob = async { downloadDogs() }
             val userDogsListJob = async { getUserDogs() }
 
@@ -52,22 +62,22 @@ class DogRepository {
 
     private suspend fun downloadDogs(): ApiResponseStatus<List<Dog>>{
         return makeNetworkCall {
-            val response = DogsApi.retrofitService.getAllDogs()
+            val response = api.getAllDogs()
             response.data.dogs.map { it.toDomain() }
         }
     }
 
     private suspend fun getUserDogs(): ApiResponseStatus<List<Dog>>{
         return makeNetworkCall {
-            val response = DogsApi.retrofitService.getUserDogs()
+            val response = api.getUserDogs()
             response.data.dogs.map { it.toDomain() }
         }
     }
 
-    suspend fun addDogToUser(dogId: Long): ApiResponseStatus<Any>{
+    override suspend fun addDogToUser(dogId: Long): ApiResponseStatus<Any>{
         return makeNetworkCall {
             val addDotToUserDto = AddDotToUserDto(dogId)
-            val response = DogsApi.retrofitService.addDogToUser(addDotToUserDto)
+            val response = api.addDogToUser(addDotToUserDto)
 
             if(!response.isSuccess){
                 throw Exception(response.message)
@@ -75,9 +85,9 @@ class DogRepository {
         }
     }
 
-    suspend fun getDogByMlId(mlDogId: String): ApiResponseStatus<Dog>{
+    override suspend fun getDogByMlId(mlDogId: String): ApiResponseStatus<Dog>{
         return makeNetworkCall {
-            val response = DogsApi.retrofitService.getDogByMlId(mlDogId)
+            val response = api.getDogByMlId(mlDogId)
 
             if(!response.isSuccess){
                 throw Exception(response.message)

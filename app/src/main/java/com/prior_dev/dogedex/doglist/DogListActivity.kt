@@ -9,25 +9,19 @@ import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity
 import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity.Companion.DOG_KEY
 import com.prior_dev.dogedex.dogdetail.ui.theme.DogedexTheme
 import com.prior_dev.dogedex.models.Dog
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class DogListActivity : ComponentActivity() {
-
-    private val viewModel: DogListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val status = viewModel.status
-
         setContent {
             DogedexTheme {
-                val dogList = viewModel.dogList
                 DogListView(
-                    dogList = dogList.value,
                     onItemClick = ::openDogDetailActivity,
                     onNavigationBackClick = ::onNavigationBackClick,
-                    status = status.value,
-                    onErrorDismiss = viewModel::resetApiResponseStatus
                 )
             }
         }
