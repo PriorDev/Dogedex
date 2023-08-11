@@ -16,7 +16,8 @@ suspend fun <T>makeNetworkCall(
         try{
             ApiResponseStatus.Success(call())
         }catch (e: UnknownHostException){
-            Log.e("TAG", "makeNetworkCall: ${e.message}" )
+            //TODO: Descomentar y poder hacerlo en los test
+            // Log.e("TAG", "makeNetworkCall: ${e.message}" )
             ApiResponseStatus.Error(R.string.unkown_host)
         }catch (e: HttpException){
             Log.e("TAG", "makeNetworkCall: ${e.message}" )
@@ -27,7 +28,7 @@ suspend fun <T>makeNetworkCall(
 
             ApiResponseStatus.Error(errorId)
         }catch (e: Exception){
-            Log.e("TAG", "makeNetworkCall: ${e.message}" )
+            //TODO: Log.e("TAG", "makeNetworkCall: ${e.message}" )
 
             val errorId = when(e.message){
                 "sign_up_error" -> R.string.error_sign_up
@@ -35,7 +36,7 @@ suspend fun <T>makeNetworkCall(
                 "user_already_exists" -> R.string.user_already_exists
                 "error_adding_dog" -> R.string.error_adding_dog
                 else -> {
-                    Log.e("TAG", "makeNetworkCall: ${e.message}" )
+                    //TODO: Log.e("TAG", "makeNetworkCall: ${e.message}" )
                     R.string.error_undefine
                 }
             }

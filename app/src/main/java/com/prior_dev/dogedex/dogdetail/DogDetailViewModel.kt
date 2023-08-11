@@ -18,7 +18,6 @@ class DogDetailViewModel @Inject constructor(
     var status = mutableStateOf<ApiResponseStatus<Any>?>(null)
         private set
 
-
     fun addDotToUser(dogId: Long){
         viewModelScope.launch {
             status.value = ApiResponseStatus.Loading()

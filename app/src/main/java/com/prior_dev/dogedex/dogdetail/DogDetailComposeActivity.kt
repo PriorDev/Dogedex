@@ -27,6 +27,7 @@ class DogDetailComposeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        //TODO: Quitar los metodos deprecados
         val dog = intent?.extras?.getParcelable<Dog>(DOG_KEY)
         val isRecognition = intent?.extras?.getBoolean(IS_RECOGNITION_KEY, false) ?: false
 
