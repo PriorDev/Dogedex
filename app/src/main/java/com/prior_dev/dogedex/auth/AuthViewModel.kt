@@ -12,7 +12,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val repository : AuthRepositoryTask
+    private val authRepo : AuthRepositoryTask,
+    private val userRepo : UserRepositoryTask
 ): ViewModel() {
 
     var user = mutableStateOf<User?>(null)
@@ -51,7 +52,7 @@ class AuthViewModel @Inject constructor(
             else -> {
                 viewModelScope.launch {
                     status.value = ApiResponseStatus.Loading()
-                    val response = repository.signUp(email, password, passwordConfirmation)
+                    val response = authRepo.signUp(email, password, passwordConfirmation)
                     handleResponseStatus(response)
                 }
             }
@@ -61,6 +62,7 @@ class AuthViewModel @Inject constructor(
     private fun handleResponseStatus(apiResponseStatus: ApiResponseStatus<User>) {
         if(apiResponseStatus is ApiResponseStatus.Success){
             user.value = apiResponseStatus.data
+            userRepo.setLoggedInUser(user.value!!)
         }
 
         status.value = apiResponseStatus
@@ -79,7 +81,7 @@ class AuthViewModel @Inject constructor(
             else -> {
                 viewModelScope.launch {
                     status.value = ApiResponseStatus.Loading()
-                    val response = repository.login(email, password)
+                    val response = authRepo.login(email, password)
                     handleResponseStatus(response)
                 }
             }

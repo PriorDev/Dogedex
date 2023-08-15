@@ -5,14 +5,31 @@ import com.prior_dev.dogedex.R
 import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.auth.AuthRepositoryTask
 import com.prior_dev.dogedex.auth.AuthViewModel
+import com.prior_dev.dogedex.auth.UserRepositoryTask
 import com.prior_dev.dogedex.models.User
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class AuthViewModelTest {
     @get:Rule
     val dogedexCoroutineRule = DogedexCoroutineRule()
+
+    class FakeUserRepo: UserRepositoryTask{
+        override fun setLoggedInUser(user: User) {
+
+        }
+
+        override fun getLoggedInUser(): User? {
+            return User(1, "raul@test.com", "dfsdf")
+        }
+
+        override fun logout() {
+
+        }
+    }
 
     @Test
     fun testLoginValidationIsError(){
@@ -30,7 +47,7 @@ class AuthViewModelTest {
             }
         }
 
-        val viewModel = AuthViewModel(FakeAuthRepository())
+        val viewModel = AuthViewModel(FakeAuthRepository(), FakeUserRepo())
         viewModel.login("", "lkdajfd")
         assert(viewModel.emailError.value == R.string.email_no_empty)
 
@@ -55,7 +72,7 @@ class AuthViewModelTest {
             }
         }
 
-        val viewModel = AuthViewModel(FakeAuthRepository())
+        val viewModel = AuthViewModel(FakeAuthRepository(), FakeUserRepo())
         viewModel.login("dfadsfa", "lkdajfd")
         assertEquals(fakeUser.email, viewModel.user.value?.email)
 
@@ -78,7 +95,7 @@ class AuthViewModelTest {
             }
         }
 
-        val viewModel = AuthViewModel(FakeAuthRepository())
+        val viewModel = AuthViewModel(FakeAuthRepository(), FakeUserRepo())
         viewModel.signUp("", "", "")
         assertEquals(R.string.email_no_empty, viewModel.emailError.value)
 
@@ -109,7 +126,7 @@ class AuthViewModelTest {
             }
         }
 
-        val viewModel = AuthViewModel(FakeAuthRepository())
+        val viewModel = AuthViewModel(FakeAuthRepository(), FakeUserRepo())
 
         viewModel.signUp(fakeUser.email, "123", "123")
         assertEquals(fakeUser, viewModel.user.value)
@@ -133,7 +150,7 @@ class AuthViewModelTest {
             }
         }
 
-        val viewModel = AuthViewModel(FakeAuthRepository())
+        val viewModel = AuthViewModel(FakeAuthRepository(), FakeUserRepo())
 
         viewModel.signUp(fakeUser.email, "123", "123")
         assert(viewModel.status.value is ApiResponseStatus.Error)
@@ -156,7 +173,7 @@ class AuthViewModelTest {
             }
         }
 
-        val viewModel = AuthViewModel(FakeAuthRepository())
+        val viewModel = AuthViewModel(FakeAuthRepository(), FakeUserRepo())
 
         viewModel.passwordError.value = 12
         viewModel.emailError.value = 12

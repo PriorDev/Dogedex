@@ -6,22 +6,21 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.prior_dev.dogedex.api.ApiResponseStatus
-import com.prior_dev.dogedex.doglist.DogRepository
+import com.prior_dev.dogedex.auth.UserRepositoryTask
 import com.prior_dev.dogedex.doglist.DogRepositoryTask
-import com.prior_dev.dogedex.machinglearning.Classifier
-import com.prior_dev.dogedex.machinglearning.ClassifierRepository
 import com.prior_dev.dogedex.machinglearning.ClassifierRepositoryTask
 import com.prior_dev.dogedex.machinglearning.DogRecognition
 import com.prior_dev.dogedex.models.Dog
+import com.prior_dev.dogedex.models.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.nio.MappedByteBuffer
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val repository : DogRepositoryTask,
-    private val classifierRepository: ClassifierRepositoryTask
+    private val dogRepo: DogRepositoryTask,
+    private val classifierRepository: ClassifierRepositoryTask,
+    private val userRepo: UserRepositoryTask
 ): ViewModel() {
 
     private val _dog = MutableLiveData<Dog>()
@@ -36,9 +35,16 @@ class MainViewModel @Inject constructor(
     val dogRecognition: LiveData<DogRecognition>
         get() = _dogRecognition
 
+    var user = MutableLiveData<User?>()
+        private set
+
+    init {
+        user.value = userRepo.getLoggedInUser()
+    }
+
     fun getRecognizedDog(mlDogId: String){
         viewModelScope.launch {
-            handleResponse(repository.getDogByMlId(mlDogId))
+            handleResponse(dogRepo.getDogByMlId(mlDogId))
         }
     }
 

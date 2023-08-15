@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.VisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -20,6 +22,8 @@ fun AuthField(
     text: String,
     visualTransformation: VisualTransformation = VisualTransformation.None,
     @StringRes errorMessageId: Int?,
+    errorTextSemantic: String = "",
+    fieldTextSemantic: String = "",
     onValueChanged: (String) -> Unit,
 ) {
     Column(
@@ -30,6 +34,7 @@ fun AuthField(
                 text = stringResource(id = errorMessageId),
                 color = MaterialTheme.colorScheme.error,
                 modifier = Modifier.fillMaxWidth()
+                    .semantics { testTag = errorTextSemantic }
             )
         }
 
@@ -38,7 +43,9 @@ fun AuthField(
             value = text,
             onValueChange = onValueChanged,
             visualTransformation = visualTransformation,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics { testTag = fieldTextSemantic },
             isError = errorMessageId != null
         )
     }

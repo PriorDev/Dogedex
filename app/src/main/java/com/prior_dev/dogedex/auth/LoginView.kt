@@ -18,6 +18,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
@@ -85,7 +87,9 @@ fun Content(
             modifier = Modifier.fillMaxWidth(),
             label = stringResource(id = R.string.email),
             text = email,
-            errorMessageId = authViewModel.emailError.value
+            errorMessageId = authViewModel.emailError.value,
+            errorTextSemantic = "email_field_error",
+            fieldTextSemantic = "email_field"
         ) {
             email = it
             authViewModel.resetErrors()
@@ -98,7 +102,9 @@ fun Content(
             label = stringResource(id = R.string.password),
             text = password,
             visualTransformation = PasswordVisualTransformation(),
-            errorMessageId = authViewModel.passwordError.value
+            errorMessageId = authViewModel.passwordError.value,
+            errorTextSemantic = "password_field_error",
+            fieldTextSemantic = "password_field"
         ) {
             password = it
             authViewModel.resetErrors()
@@ -106,7 +112,8 @@ fun Content(
 
         Button(modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 16.dp),
+            .padding(top = 16.dp)
+            .semantics { testTag = "login_button" },
             onClick = {
                 onLoginButtonClick(email, password)
             }
@@ -114,7 +121,7 @@ fun Content(
             Text(
                 stringResource(R.string.login),
                 textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.Medium,
             )
         }
 
@@ -132,7 +139,8 @@ fun Content(
                     onRegisterButtonClick()
                 })
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(16.dp)
+                .semantics { testTag = "register_text_button" },
             text = stringResource(R.string.register),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Medium

@@ -34,6 +34,7 @@ import com.prior_dev.dogedex.machinglearning.DogRecognition
 import com.prior_dev.dogedex.models.Dog
 import com.prior_dev.dogedex.models.User
 import com.prior_dev.dogedex.settings.SettingsActivity
+import com.prior_dev.dogedex.testutils.EspressoIdlingResource
 import dagger.hilt.android.AndroidEntryPoint
 import org.tensorflow.lite.support.common.FileUtil
 import java.util.concurrent.ExecutorService
@@ -45,7 +46,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var imageCapture: ImageCapture
     private lateinit var cameraExecutor: ExecutorService
-    private lateinit var classifier: Classifier
     private var isCameraReady = false
     private val viewModel: MainViewModel by viewModels()
 
@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val user = User.getLoggedInUser(this)
+        val user = viewModel.user.value
         if(user == null){
             openLoginActivity()
             return
@@ -85,7 +85,6 @@ class MainActivity : AppCompatActivity() {
         binding.dogListFab.setOnClickListener {
             openDogListActivity()
         }
-
 
         viewModel.status.observe(this){ status ->
             when(status){
@@ -151,6 +150,7 @@ class MainActivity : AppCompatActivity() {
     private fun starCamera(){
         val cameraProviderFeature = ProcessCameraProvider.getInstance(this)
 
+        EspressoIdlingResource.increment()
         cameraProviderFeature.addListener({
             val cameraProvider = cameraProviderFeature.get()
             val preview = Preview.Builder().build()
@@ -163,6 +163,7 @@ class MainActivity : AppCompatActivity() {
 
             imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
                 viewModel.recognizeImage(imageProxy)
+                EspressoIdlingResource.decrement()
             }
 
             cameraProvider.bindToLifecycle(

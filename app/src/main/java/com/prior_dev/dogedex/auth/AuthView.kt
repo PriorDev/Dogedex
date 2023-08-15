@@ -1,6 +1,7 @@
 package com.prior_dev.dogedex.auth
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,26 +15,31 @@ import com.prior_dev.dogedex.models.User
 
 @Composable
 fun AuthScreen(
-    status: ApiResponseStatus<User>?,
-    onErrorDismiss: () -> Unit,
-    onLoginButtonClick: (String, String) -> Unit,
-    onSignUpButtonClick: (email: String, password: String, passwordConfirmation: String) -> Unit,
-    authViewModel: AuthViewModel,
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onUserLogIn: () -> Unit,
 ) {
+    val user = authViewModel.user
+    user.value?.let{
+        onUserLogIn()
+    }
+
+    val status = authViewModel.status.value
+
     val navController = rememberNavController()
     AuthNavHost(
         navController = navController,
-        onLoginButtonClick = onLoginButtonClick,
-        onSignUpButtonClick = onSignUpButtonClick,
+        onLoginButtonClick = authViewModel::login,
+        onSignUpButtonClick = authViewModel::signUp,
         authViewModel = authViewModel,
-        status = status,
-        onErrorDismiss = onErrorDismiss
     )
 
     if(status is ApiResponseStatus.Loading<User>){
         LoadingWheel()
     }else if(status is ApiResponseStatus.Error<User>){
-        ErrorDialog(messageId = status.messageId, onErrorDismiss = onErrorDismiss)
+        ErrorDialog(
+            messageId = status.messageId,
+            onErrorDismiss = authViewModel::resetApiResponseStatus
+        )
     }
 }
 
@@ -43,8 +49,6 @@ private fun AuthNavHost(
     onLoginButtonClick: (String, String) -> Unit,
     onSignUpButtonClick: (email: String, password: String, passwordConfirmation: String) -> Unit,
     authViewModel: AuthViewModel,
-    status: ApiResponseStatus<User>?,
-    onErrorDismiss: () -> Unit,
 ) {
     NavHost(
         navController = navController,
@@ -69,7 +73,5 @@ private fun AuthNavHost(
                 authViewModel = authViewModel
             )
         }
-
-
     }
 }
