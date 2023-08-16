@@ -5,6 +5,7 @@ import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.doglist.DogListViewModel
 import com.prior_dev.dogedex.doglist.DogRepositoryTask
 import com.prior_dev.dogedex.models.Dog
+import kotlinx.coroutines.flow.Flow
 import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
@@ -33,6 +34,10 @@ class DogListViewModelTest {
                 return ApiResponseStatus.Success(Dog(id = 2, index = 2))
             }
 
+            override suspend fun getProbableDogs(probableDogsId: ArrayList<String>): Flow<ApiResponseStatus<Dog>> {
+                TODO("Not yet implemented")
+            }
+
         }
 
         val viewModel = DogListViewModel(fakeDogRepository())
@@ -56,6 +61,10 @@ class DogListViewModelTest {
                 return ApiResponseStatus.Success(Dog(id = 2, index = 2))
             }
 
+            override suspend fun getProbableDogs(probableDogsId: ArrayList<String>): Flow<ApiResponseStatus<Dog>> {
+                TODO("Not yet implemented")
+            }
+
         }
 
         val viewModel = DogListViewModel(fakeDogRepository())
@@ -76,6 +85,10 @@ class DogListViewModelTest {
 
             override suspend fun getDogByMlId(mlDogId: String): ApiResponseStatus<Dog> {
                 return ApiResponseStatus.Success(Dog(id = 2, index = 2))
+            }
+
+            override suspend fun getProbableDogs(probableDogsId: ArrayList<String>): Flow<ApiResponseStatus<Dog>> {
+                TODO("Not yet implemented")
             }
 
         }

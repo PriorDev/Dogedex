@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import com.prior_dev.dogedex.R
 import com.prior_dev.dogedex.api.ApiResponseStatus
 import com.prior_dev.dogedex.dogdetail.ui.theme.DogedexTheme
+import com.prior_dev.dogedex.machinglearning.DogRecognition
 import com.prior_dev.dogedex.models.Dog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,30 +21,12 @@ class DogDetailComposeActivity : ComponentActivity() {
     companion object{
         const val DOG_KEY = "dog"
         const val IS_RECOGNITION_KEY =  "is_recognition"
+        const val MOST_PROBABLE_DOGS_IDS =  "most_probable_dogs_ids"
     }
-
-    private val viewModel: DogDetailViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //TODO: Quitar los metodos deprecados
-        val dog = intent?.extras?.getParcelable<Dog>(DOG_KEY)
-        val isRecognition = intent?.extras?.getBoolean(IS_RECOGNITION_KEY, false) ?: false
-
-        if(dog == null){
-            Toast.makeText(this, R.string.error_dog_not_found, Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
-
         setContent {
-            val status = viewModel.status
-
-            if(status.value is ApiResponseStatus.Success){
-                finish()
-            }
-
             DogedexTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -51,21 +34,10 @@ class DogDetailComposeActivity : ComponentActivity() {
                 ) {
 
                     DogDetailView(
-                        dog = dog,
-                        status = status.value,
-                        onButtonClick = { onFabClick(isRecognition, dog) },
-                        onErrorDismiss = viewModel::resetApiResponseStatus
+                        finishActivity = { finish() }
                     )
                 }
             }
-        }
-    }
-
-    private fun onFabClick(isRecognition: Boolean, dog: Dog){
-        if(isRecognition){
-            viewModel.addDotToUser(dog.id)
-        }else{
-            finish()
         }
     }
 }

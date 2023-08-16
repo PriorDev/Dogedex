@@ -13,7 +13,7 @@ import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 interface ClassifierRepositoryTask{
-    suspend fun recognizeImage(imageProxy: ImageProxy): DogRecognition
+    suspend fun recognizeImage(imageProxy: ImageProxy): List<DogRecognition>
 }
 
 class ClassifierRepository @Inject constructor(
@@ -21,13 +21,13 @@ class ClassifierRepository @Inject constructor(
     private val dispatcher: CoroutineDispatcher
 ): ClassifierRepositoryTask {
 
-    override suspend fun recognizeImage(imageProxy: ImageProxy): DogRecognition{
+    override suspend fun recognizeImage(imageProxy: ImageProxy): List<DogRecognition> {
         return withContext(dispatcher){
             val bitmap = convertImageProxyToBitmap(imageProxy)
 
             bitmap?.let {
-                classifier.recognizeImage(it).first()
-            } ?: DogRecognition("", 0f)
+                classifier.recognizeImage(it).subList(0, 5)
+            } ?: listOf(DogRecognition("", 0f))
         }
     }
 

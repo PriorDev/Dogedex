@@ -9,6 +9,9 @@ import com.prior_dev.dogedex.api.makeNetworkCall
 import com.prior_dev.dogedex.models.Dog
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -16,6 +19,7 @@ interface DogRepositoryTask {
     suspend fun getDogCollection(): ApiResponseStatus<List<Dog>>
     suspend fun addDogToUser(dogId: Long): ApiResponseStatus<Any>
     suspend fun getDogByMlId(mlDogId: String): ApiResponseStatus<Dog>
+    suspend fun getProbableDogs(probableDogsId: ArrayList<String>): Flow<ApiResponseStatus<Dog>>
 }
 
 class DogRepository @Inject constructor(
@@ -96,4 +100,11 @@ class DogRepository @Inject constructor(
             response.data.dog.toDomain()
         }
     }
+
+    override suspend fun getProbableDogs(probableDogsId: ArrayList<String>): Flow<ApiResponseStatus<Dog>> = flow {
+        for(mlDogId in probableDogsId){
+            val dog = getDogByMlId(mlDogId)
+            emit(dog)
+        }
+    }.flowOn(dispatcher)
 }

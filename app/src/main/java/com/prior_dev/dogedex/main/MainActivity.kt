@@ -28,6 +28,7 @@ import com.prior_dev.dogedex.databinding.ActivityMainBinding
 import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity
 import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity.Companion.DOG_KEY
 import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity.Companion.IS_RECOGNITION_KEY
+import com.prior_dev.dogedex.dogdetail.DogDetailComposeActivity.Companion.MOST_PROBABLE_DOGS_IDS
 import com.prior_dev.dogedex.doglist.DogListActivity
 import com.prior_dev.dogedex.machinglearning.Classifier
 import com.prior_dev.dogedex.machinglearning.DogRecognition
@@ -117,6 +118,7 @@ class MainActivity : AppCompatActivity() {
     private fun openDogDetailActivity(dog: Dog) {
         val intent = Intent(this, DogDetailComposeActivity::class.java)
         intent.putExtra(DOG_KEY, dog)
+        intent.putExtra(MOST_PROBABLE_DOGS_IDS, ArrayList<String>(viewModel.probableDogIds))
         intent.putExtra(IS_RECOGNITION_KEY, true)
         startActivity(intent)
     }

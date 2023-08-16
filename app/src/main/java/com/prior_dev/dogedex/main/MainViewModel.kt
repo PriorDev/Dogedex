@@ -35,6 +35,8 @@ class MainViewModel @Inject constructor(
     val dogRecognition: LiveData<DogRecognition>
         get() = _dogRecognition
 
+    val probableDogIds = ArrayList<String>()
+
     var user = MutableLiveData<User?>()
         private set
 
@@ -58,7 +60,21 @@ class MainViewModel @Inject constructor(
 
     fun recognizeImage(imageProxy: ImageProxy){
         viewModelScope.launch {
-            _dogRecognition.value = classifierRepository.recognizeImage(imageProxy)
+            val dogRecognitionList = classifierRepository.recognizeImage(imageProxy)
+            _dogRecognition.value = dogRecognitionList.first()
+
+            probableDogIds.clear()
+
+            if(dogRecognitionList.size >= 5){
+                probableDogIds.addAll(
+                    dogRecognitionList
+                        .subList(1,4)
+                        .map {
+                            it.id
+                        }
+                )
+            }
+
             imageProxy.close()
         }
     }
